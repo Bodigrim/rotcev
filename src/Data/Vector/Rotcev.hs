@@ -18,6 +18,7 @@
 module Data.Vector.Rotcev
   ( Rotcev(..)
   , reverse
+  , unRotcev
   , MRotcev(..)
   , mreverse
   ) where
@@ -56,6 +57,17 @@ reverse = \case
   Forward  v -> Backward v
   Backward v -> Forward  v
 {-# INLINE reverse #-}
+
+-- | Unwrap 'Rotcev', extracting an underlying vector.
+-- This takes O(1) for 'Forward', but full O(n) time for 'Backward' case,
+-- so it would rather be avoided in intermediate computations.
+-- Instead leverage opportunities, provided by generic 'V.Vector'
+-- and 'MV.MVector' instances.
+unRotcev :: V.Vector v a => Rotcev v a -> v a
+unRotcev = \case
+  Forward v  -> v
+  Backward v -> V.reverse v
+{-# INLINE unRotcev #-}
 
 -- | Wrapper for mutable vectors, equipped with a 'MV.MVector' instance.
 data MRotcev v s a

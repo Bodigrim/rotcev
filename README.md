@@ -21,9 +21,9 @@ In a mutable setting you can freely manipulate original and reversed vectors sim
     let cev = mreverse vec
     Data.Vector.Generic.Mutable.write vec 0 1.0
     Data.Vector.Generic.Mutable.write cev 0 2.0
-    Data.Vector.Generic.freeze vec
-    :: Rotcev Data.Vector.Vector Double
-Forward [1.0,0.0,2.0]
+    unRotcev <$> Data.Vector.Generic.freeze vec
+    :: Data.Vector.Vector Double
+[1.0,0.0,2.0]
 ```
 
 This library works for any flavor of `Vector`: boxed, unboxed, storable, whatever.
