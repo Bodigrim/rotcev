@@ -1,3 +1,9 @@
+-- |
+-- Module:      Main
+-- Copyright:   (c) 2019 Andrew Lelechenko
+-- Licence:     BSD3
+-- Maintainer:  Andrew Lelechenko <andrew.lelechenko@gmail.com>
+
 {-# LANGUAGE PolyKinds           #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 

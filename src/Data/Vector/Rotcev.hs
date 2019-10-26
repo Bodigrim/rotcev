@@ -1,3 +1,13 @@
+-- |
+-- Module:      Data.Vector.Rotcev
+-- Copyright:   (c) 2019 Andrew Lelechenko
+-- Licence:     BSD3
+-- Maintainer:  Andrew Lelechenko <andrew.lelechenko@gmail.com>
+--
+-- A wrapper for an arbitrary 'V.Vector' with O(1) 'reverse'.
+-- Instead of creating a copy, it just flips a flag, which inverts indexing.
+-- Imagine it as a vector with a switch between little-endianness and big-endianness.
+
 {-# LANGUAGE BangPatterns          #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE LambdaCase            #-}
@@ -7,8 +17,8 @@
 
 module Data.Vector.Rotcev
   ( Rotcev(..)
-  , MRotcev(..)
   , reverse
+  , MRotcev(..)
   , mreverse
   ) where
 
@@ -17,10 +27,18 @@ import Data.Function
 import qualified Data.Vector.Generic as V
 import qualified Data.Vector.Generic.Mutable as MV
 
+-- | Wrapper for immutable vectors, equipped with a 'V.Vector' instance.
+--
+-- >>> Forward  (Data.Vector.fromList [0..100]) Data.Vector.Generic.! 10
+-- 10
+-- >>> Backward (Data.Vector.fromList [0..100]) Data.Vector.Generic.! 10
+-- 90
 data Rotcev v a
   = Forward  !(v a)
+  -- ^ Behaves as an original vector in respect to 'V.Vector' operations.
   | Backward !(v a)
-  deriving (Show)
+  -- ^ Behaves as a reversed vector in respect to 'V.Vector' operations.
+  deriving (Eq, Ord, Show)
 
 fromRotcev :: Rotcev v a -> v a
 fromRotcev = \case
@@ -28,15 +46,23 @@ fromRotcev = \case
   Backward v -> v
 {-# INLINE fromRotcev #-}
 
+-- | Reverse an immutable vector in O(1) time and space.
+--
+-- >>> vec = Data.Vector.Generic.fromList [0..100] :: Rotcev Data.Vector.Vector Int
+-- >>> reverse vec Data.Vector.Generic.! 10
+-- 90
 reverse :: Rotcev v a -> Rotcev v a
 reverse = \case
   Forward  v -> Backward v
   Backward v -> Forward  v
 {-# INLINE reverse #-}
 
+-- | Wrapper for mutable vectors, equipped with a 'MV.MVector' instance.
 data MRotcev v s a
   = MForward  !(V.Mutable v s a)
+  -- ^ Behaves as an original vector in respect to 'MV.MVector' operations.
   | MBackward !(V.Mutable v s a)
+  -- ^ Behaves as a reversed vector in respect to 'MV.MVector' operations.
 
 fromMRotcev :: MRotcev v s a -> V.Mutable v s a
 fromMRotcev = \case
@@ -44,6 +70,7 @@ fromMRotcev = \case
   MBackward v -> v
 {-# INLINE fromMRotcev #-}
 
+-- | Reverse a mutable vector in O(1) time and space.
 mreverse :: MRotcev v s a -> MRotcev v s a
 mreverse = \case
   MForward  v -> MBackward v
