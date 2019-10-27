@@ -1,4 +1,4 @@
-# vector-rotcev
+# vector-rotcev [![Build Status](https://travis-ci.org/Bodigrim/rotcev.svg)](https://travis-ci.org/Bodigrim/rotcev) [![Hackage](http://img.shields.io/hackage/v/vector-rotcev.svg)](https://hackage.haskell.org/package/vector-rotcev) [![Hackage CI](https://matrix.hackage.haskell.org/api/v2/packages/vector-rotcev/badge)](https://matrix.hackage.haskell.org/package/vector-rotcev) [![Stackage LTS](http://stackage.org/package/vector-rotcev/badge/lts)](http://stackage.org/lts/package/vector-rotcev) [![Stackage Nightly](http://stackage.org/package/vector-rotcev/badge/nightly)](http://stackage.org/nightly/package/vector-rotcev)
 
 A wrapper for an arbitrary `Vector` with O(1) `reverse`. Instead of creating a copy, it just flips a flag, which inverts indexing. Imagine it as a vector with a switch between little-endianness and big-endianness.
 
