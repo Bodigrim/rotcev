@@ -14,6 +14,8 @@ description:
   Instead of creating a copy, it just flips a flag, which inverts indexing.
   Imagine it as a vector with a switch between little-endianness and big-endianness.
 
+tested-with: GHC==9.0.1, GHC==8.10.4, GHC==8.8.4, GHC==8.6.5, GHC==8.4.4, GHC==8.2.2, GHC==8.0.2
+
 library
   exposed-modules:
     Data.Vector.Rotcev
