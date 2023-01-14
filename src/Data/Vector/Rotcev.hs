@@ -26,6 +26,7 @@ module Data.Vector.Rotcev
 
 import Prelude hiding (reverse)
 import Data.Function
+import Data.Vector.Fusion.Util (Box(..))
 import qualified Data.Vector.Generic as V
 import qualified Data.Vector.Generic.Mutable as MV
 
@@ -189,11 +190,12 @@ instance V.Vector v a => V.Vector (Rotcev v) a where
       dst = fromMRotcev dst'
       src = fromRotcev  src'
       !n = V.basicLength src
+
       do_copy i
-        | i < n = do
-          x <- V.basicUnsafeIndexM src i
-          MV.basicUnsafeWrite dst (n - 1 - i) x
-          do_copy (i + 1)
+        | i < n = case V.basicUnsafeIndexM src i of
+          Box x -> do
+            MV.basicUnsafeWrite dst (n - 1 - i) x
+            do_copy (i + 1)
         | otherwise = pure ()
 
   {-# INLINE basicUnsafeFreeze #-}
