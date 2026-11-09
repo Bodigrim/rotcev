@@ -41,7 +41,18 @@ data Rotcev v a
   -- ^ Behaves as an original vector in respect to 'V.Vector' operations.
   | Backward !(v a)
   -- ^ Behaves as a reversed vector in respect to 'V.Vector' operations.
-  deriving (Eq, Ord, Show)
+
+instance (Eq (v a), V.Vector v a) => Eq (Rotcev v a) where
+  Forward xs == Forward ys = xs == ys
+  Forward xs == Backward ys = xs == V.reverse ys
+  Backward xs == Forward ys = V.reverse xs == ys
+  Backward xs == Backward ys = xs == ys
+
+instance (Ord (v a), V.Vector v a) => Ord (Rotcev v a) where
+  compare = compare `on` unRotcev
+
+instance (Show (v a), V.Vector v a) => Show (Rotcev v a) where
+  showsPrec prec = showsPrec prec . unRotcev
 
 fromRotcev :: Rotcev v a -> v a
 fromRotcev = \case
